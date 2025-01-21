@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-cu2oa3jqf0us73bq8qdg-a.oregon-postgres.render.com/development_master
+    username: "development_master_user"
+    password: "53jheC1s7AypJdpNlJooa0he3qPpAka6"
+    driver-class-name: org.postgresql.Driver
+  application:
+    name: "tmb-server"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+      read-unknown-enum-values-using-default-value: true
+security:
+  jwt:
+    secret-key: "BgYx0AGjxLRN/zo0hw6q1r5m1V1ItqiHP4krHnaxQus="
+    expiration-time: 3600000
+logging:
+  level:
+    org:
+      springframework: DEBUG
+    com:
+      totalMiniBmw: DEBUG
