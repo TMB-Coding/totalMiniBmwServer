@@ -34,4 +34,10 @@ public class ToolService {
        Optional<ToolEntity> tool = toolRepository.findById(id);
        tool.ifPresent(toolRepository::delete);
     }
+
+    public void editTool(ToolEntity tool, String toolId) {
+        tool.setId(toolId);
+        tool.setBarcode(toolRepository.findById(toolId).get().getBarcode());
+        toolRepository.save(tool);
+    }
 }

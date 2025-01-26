@@ -40,6 +40,7 @@ public class ToolController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN') AND hasAuthority('INVENTORY')")
     @PatchMapping("/{toolId}")
     public ResponseEntity<ToolEntity> editTool(@PathVariable String toolId, @RequestBody ToolEntity tool) {
+        toolService.editTool(tool, toolId);
         return ResponseEntity.ok(new ToolEntity());
     }
 

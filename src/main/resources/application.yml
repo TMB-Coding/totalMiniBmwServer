@@ -27,3 +27,7 @@ logging:
       springframework: DEBUG
     com:
       totalMiniBmw: DEBUG
+aws:
+  s3:
+    access-key-id: "AKIAXTORPBNJBVTC2YFQ"
+    secret-access-key: "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"
