@@ -1,5 +1,6 @@
 package com.totalMiniBmw.tmb_server.services.auth;
 
+import com.totalMiniBmw.tmb_server.entities.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -53,6 +54,7 @@ public class JwtService {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
+                .claim("session", "ALL_APPS")
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
@@ -98,4 +100,15 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    public String generateKioskToken(UserEntity user) {
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .claim("session", "ONLY_KIOSK") // Restrict JWT to this app
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + getExpirationTime()))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
 }

@@ -32,7 +32,7 @@ public class UserEntity implements UserDetails {
     @Column(unique = true, nullable = false)
     @NotNull(message = "Employee Number required.")
     @Min(1)
-    private int employeeNumber;
+    private long employeeNumber;
 
     @NotBlank(message = "First name required.")
     private String firstName;

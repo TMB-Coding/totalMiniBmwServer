@@ -1,5 +1,6 @@
 package com.totalMiniBmw.tmb_server.utils;
 
+import com.totalMiniBmw.tmb_server.services.UserService;
 import com.totalMiniBmw.tmb_server.services.auth.JwtLogoutService;
 import com.totalMiniBmw.tmb_server.services.auth.JwtService;
 import jakarta.servlet.FilterChain;
@@ -9,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +21,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -26,16 +31,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final JwtLogoutService jwtLogoutService;
     private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
     public JwtAuthenticationFilter(
             JwtService jwtService,
             UserDetailsService userDetailsService,
-            HandlerExceptionResolver handlerExceptionResolver, JwtLogoutService jwtLogoutService
-    ) {
+            HandlerExceptionResolver handlerExceptionResolver, JwtLogoutService jwtLogoutService,
+            UserService userService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.handlerExceptionResolver = handlerExceptionResolver;
         this.jwtLogoutService = jwtLogoutService;
+        this.userService = userService;
     }
 
     @Override
@@ -54,6 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             final String jwt = authHeader.substring(7);
             final String userEmail = jwtService.extractUsername(jwt);
+            final String sessionType = jwtService.extractClaim(jwt, claims -> claims.get("session", String.class));
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -79,10 +87,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
+            List<GrantedAuthority> authorities = new ArrayList<>(userDetails.getAuthorities());
+            if (sessionType != null) {
+                authorities.add(new SimpleGrantedAuthority("SESSION_" + sessionType.toUpperCase()));
+            }
+
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
-                    userDetails.getAuthorities()
+                    authorities
             );
 
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

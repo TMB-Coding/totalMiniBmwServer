@@ -1,5 +1,6 @@
 package com.totalMiniBmw.tmb_server.controller;
 
+import com.totalMiniBmw.tmb_server.dto.KioskLoginDto;
 import com.totalMiniBmw.tmb_server.dto.UserLoginDto;
 import com.totalMiniBmw.tmb_server.dto.responses.LoginResponse;
 import com.totalMiniBmw.tmb_server.entities.UserEntity;
@@ -34,6 +35,26 @@ public class AuthenticationController {
         UserEntity authenticatedUser = authenticationService.authenticate(loginUserDto);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(jwtToken);
+        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+
+        Cookie cookie = new Cookie("jwt", jwtToken);
+        cookie.setHttpOnly(true); // Prevent JavaScript access (XSS protection)
+        cookie.setSecure(false);  // Use only over HTTPS
+        cookie.setPath("/");     // Make the cookie available site-wide
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/kauth")
+    public ResponseEntity<LoginResponse> authenticateKiosk(@RequestBody KioskLoginDto kioskLoginDto, HttpServletResponse response) {
+        UserEntity authenticatedUser = authenticationService.authenticateKiosk(kioskLoginDto);
+
+        String jwtToken = jwtService.generateKioskToken(authenticatedUser);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);

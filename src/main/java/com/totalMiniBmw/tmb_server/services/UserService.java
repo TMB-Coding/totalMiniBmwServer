@@ -23,11 +23,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<ToolEntity> getUsersCheckedOutTools(String email) {
-        Optional<UserEntity> user = userRepository.findByEmail(email);
-        if (user.isEmpty()) throw new ErrorResponseException(HttpStatusCode.valueOf(404));
-        return user.get().getCheckedOut();
-    }
+//    public List<ToolEntity> getUsersCheckedOutTools(String email) {
+//        Optional<UserEntity> user = userRepository.findByEmail(email);
+//        if (user.isEmpty()) throw new ErrorResponseException(HttpStatusCode.valueOf(404));
+//        return user.get().getCheckedOut();
+//    }
 
     public UserEntity create(UserRegisterDto input) {
         UserEntity user = new UserEntity();

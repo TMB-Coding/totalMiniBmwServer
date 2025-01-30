@@ -25,8 +25,6 @@ public class S3Controller {
 
     @PostMapping("/upload/image")
     public ResponseEntity<GenericActionResponse> uploadFile(@RequestParam("image") MultipartFile file, @RequestParam("toolId") String toolId) throws IOException {
-            String bucketName = "tmb-inventory";
-
             s3Service.uploadFile(file.getInputStream(), toolId, file.getContentType());
             GenericActionResponse gar = new GenericActionResponse("Attempted to upload image to AWS S3.", null, GenericActionType.POST);
 

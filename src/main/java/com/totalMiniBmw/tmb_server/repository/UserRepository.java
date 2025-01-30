@@ -25,5 +25,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
             nativeQuery = true)
     void removeAuthorityFromUser(@Param("id") String id, @Param("authorityToRemove") String authorityToRemove);
     Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findByEmployeeNumber(long employeeNumber);
 
 }

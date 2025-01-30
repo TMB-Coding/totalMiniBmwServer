@@ -45,7 +45,7 @@ public class ToolController {
     }
 
 
-    @PreAuthorize("(hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')) and hasAuthority('INVENTORY')")
+    @PreAuthorize("(hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')) and (hasAuthority('INVENTORY') AND hasAuthority('SESSION_ALL_APPS'))")
     @GetMapping("/{toolId}")
     public ResponseEntity<ToolEntity> getTool(@PathVariable String toolId) {
         Optional<ToolEntity> tool = toolRepository.findById(toolId);
@@ -56,7 +56,7 @@ public class ToolController {
         return ResponseEntity.ok().body(tool.get());
     }
 
-    @PreAuthorize("(hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')) and hasAuthority('INVENTORY')")
+    @PreAuthorize("(hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')) and (hasAuthority('INVENTORY') AND hasAuthority('SESSION_ALL_APPS'))")
     @GetMapping("/")
     public ResponseEntity<List<ToolEntity>> getAllTools() {
         List<ToolEntity> tools = toolRepository.findAll();
