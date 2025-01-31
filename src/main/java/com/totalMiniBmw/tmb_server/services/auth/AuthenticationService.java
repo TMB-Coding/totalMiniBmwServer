@@ -37,6 +37,14 @@ public class AuthenticationService {
 
     public UserEntity authenticateKiosk(KioskLoginDto input) {
         Optional<UserEntity> user = userRepository.findByEmployeeNumber(input.getEmployeeNumber());
-        return user.orElse(null);
+        if (user.isPresent()) {
+            UserEntity userEntity = user.get();
+            if (!userEntity.getFirstName().toLowerCase().equals(input.getName())) {
+                return null;
+            }
+            return userEntity;
+        }
+
+        return null;
     }
 }

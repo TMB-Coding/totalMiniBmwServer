@@ -50,13 +50,17 @@ public class AuthenticationController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping("/kauth")
+    @PostMapping("/kiosk")
     public ResponseEntity<LoginResponse> authenticateKiosk(@RequestBody KioskLoginDto kioskLoginDto, HttpServletResponse response) {
-        UserEntity authenticatedUser = authenticationService.authenticateKiosk(kioskLoginDto);
+        LoginResponse loginResponse = new LoginResponse();
 
+        UserEntity authenticatedUser = authenticationService.authenticateKiosk(kioskLoginDto);
+        if (authenticatedUser == null) {
+            loginResponse.setToken(null);
+            return ResponseEntity.status(500).body(loginResponse);
+        }
         String jwtToken = jwtService.generateKioskToken(authenticatedUser);
 
-        LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
         loginResponse.setExpiresIn(jwtService.getExpirationTime());
 
