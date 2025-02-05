@@ -26,9 +26,17 @@ public class S3Controller {
     @PostMapping("/upload/image")
     public ResponseEntity<GenericActionResponse> uploadFile(@RequestParam("image") MultipartFile file, @RequestParam("toolId") String toolId) throws IOException {
             s3Service.uploadFile(file.getInputStream(), toolId, file.getContentType());
-            GenericActionResponse gar = new GenericActionResponse("Attempted to upload image to AWS S3.", null, GenericActionType.POST);
+            GenericActionResponse gar = new GenericActionResponse("Attempted to upload image to MinIO S3.", null, GenericActionType.POST);
 
             return ResponseEntity.ok().body(gar);
+    }
+
+    @PostMapping("/upload/laser")
+    public ResponseEntity<GenericActionResponse> uploadLaserFile(@RequestParam("image") MultipartFile file, @RequestParam("toolId") String toolId) throws IOException {
+        s3Service.uploadFile(file.getInputStream(), toolId+"_LASER", file.getContentType());
+        GenericActionResponse gar = new GenericActionResponse("Attempted to upload laser file to MinIO S3.", null, GenericActionType.POST);
+
+        return ResponseEntity.ok().body(gar);
     }
 
 }
