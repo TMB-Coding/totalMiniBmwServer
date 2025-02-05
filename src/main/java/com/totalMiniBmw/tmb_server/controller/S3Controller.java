@@ -32,7 +32,7 @@ public class S3Controller {
     }
 
     @PostMapping("/upload/laser")
-    public ResponseEntity<GenericActionResponse> uploadLaserFile(@RequestParam("image") MultipartFile file, @RequestParam("toolId") String toolId) throws IOException {
+    public ResponseEntity<GenericActionResponse> uploadLaserFile(@RequestParam("file") MultipartFile file, @RequestParam("toolId") String toolId) throws IOException {
         s3Service.uploadFile(file.getInputStream(), toolId+"_LASER", file.getContentType());
         GenericActionResponse gar = new GenericActionResponse("Attempted to upload laser file to MinIO S3.", null, GenericActionType.POST);
 
