@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   datasource:
     url: jdbc:postgresql://dpg-cu2oa3jqf0us73bq8qdg-a.oregon-postgres.render.com/development_master
     username: "development_master_user"
