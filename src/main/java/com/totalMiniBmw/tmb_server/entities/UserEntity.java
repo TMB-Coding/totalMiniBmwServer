@@ -1,8 +1,8 @@
 package com.totalMiniBmw.tmb_server.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import com.totalMiniBmw.tmb_server.entities.enums.Authority;
+import com.totalMiniBmw.tmb_server.views.Views;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
+// prevents recursive loop
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -35,9 +37,13 @@ public class UserEntity implements UserDetails {
     private long employeeNumber;
 
     @NotBlank(message = "First name required.")
+    // only shows the first name for public routes
+    @JsonView(Views.Public.class)
     private String firstName;
 
     @NotBlank(message = "Last name required.")
+    // only shows the first name for public routes
+    @JsonView(Views.Public.class)
     private String lastName;
 
     @Column(unique = true, nullable = false)
@@ -59,7 +65,6 @@ public class UserEntity implements UserDetails {
     private Boolean promptToSetPw = false;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<ToolEntity> checkedOut;
 
     @Override

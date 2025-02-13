@@ -1,10 +1,8 @@
 package com.totalMiniBmw.tmb_server.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
 import com.totalMiniBmw.tmb_server.entities.enums.ToolCondition;
+import com.totalMiniBmw.tmb_server.views.Views;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -16,6 +14,10 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
+// prevents recursive loop
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// shows the entire tool object for public routes
+@JsonView(Views.Public.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -67,6 +69,7 @@ public class ToolEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_account_id")
-    @JsonBackReference
+    @JsonView(Views.Public.class)
+
     private UserEntity user;
 }

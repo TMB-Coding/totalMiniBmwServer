@@ -1,11 +1,13 @@
 package com.totalMiniBmw.tmb_server.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.totalMiniBmw.tmb_server.dto.responses.GenericActionResponse;
 import com.totalMiniBmw.tmb_server.dto.responses.GenericActionType;
 import com.totalMiniBmw.tmb_server.entities.ToolEntity;
 import com.totalMiniBmw.tmb_server.repository.ToolRepository;
 import com.totalMiniBmw.tmb_server.services.ToolService;
 import com.totalMiniBmw.tmb_server.services.UserService;
+import com.totalMiniBmw.tmb_server.views.Views;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +49,7 @@ public class ToolController {
 
     @PreAuthorize("(hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')) and (hasAuthority('INVENTORY') AND hasAuthority('SESSION_ALL_APPS'))")
     @GetMapping("/{toolId}")
+    @JsonView(Views.Public.class)
     public ResponseEntity<ToolEntity> getTool(@PathVariable String toolId) {
         Optional<ToolEntity> tool = toolRepository.findById(toolId);
 
