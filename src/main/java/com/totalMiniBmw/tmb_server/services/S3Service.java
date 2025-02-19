@@ -1,8 +1,13 @@
 package com.totalMiniBmw.tmb_server.services;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
@@ -31,5 +36,20 @@ public class S3Service {
 
         // Upload the file
         s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream, inputStream.available()));
+    }
+
+    public ResponseEntity<InputStreamResource> downloadFile(String objectKey) {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket("tmb-inventory")
+                .key(objectKey)
+                .build();
+
+        // Get the object as an InputStream
+        InputStream objectStream = s3Client.getObject(getObjectRequest);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + objectKey)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(new InputStreamResource(objectStream));
     }
 }
