@@ -54,9 +54,6 @@ public class UserEntity implements UserDetails {
     @JsonIgnore
     private String password;
 
-    @NotBlank(message = "Kiosk token required.")
-    private String kioskToken;
-
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "JSONB", name = "authorities")
     @JdbcTypeCode(SqlTypes.JSON)
