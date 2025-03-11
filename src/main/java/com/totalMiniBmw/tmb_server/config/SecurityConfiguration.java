@@ -36,7 +36,7 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost/", "http://inv.tmb.local/", "http://192.168.10.2/"));
+        configuration.setAllowedOrigins(List.of("http://localhost/", "http://inv.tmb.local/", "http://10.40.0.2/"));
         configuration.setAllowedMethods(List.of("GET","POST", "DELETE", "PUT", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
