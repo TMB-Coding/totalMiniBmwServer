@@ -24,27 +24,10 @@ import java.util.Optional;
 public class ToolController {
     private final ToolService toolService;
     private final ToolRepository toolRepository;
-    private final UserService userService;
 
     public ToolController(ToolService toolService, ToolRepository toolRepository, UserService userService) {
         this.toolService = toolService;
         this.toolRepository = toolRepository;
-        this.userService = userService;
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') AND hasAuthority('INVENTORY')")
-    @PostMapping("/")
-    public ResponseEntity<ToolEntity> addTool(@Valid @RequestBody ToolEntity tool) {
-        ToolEntity newTool = toolService.saveTool(tool);
-
-        return ResponseEntity.ok().body(newTool);
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') AND hasAuthority('INVENTORY')")
-    @PatchMapping("/{toolId}")
-    public ResponseEntity<ToolEntity> editTool(@PathVariable String toolId, @RequestBody ToolEntity tool) {
-        toolService.editTool(tool, toolId);
-        return ResponseEntity.ok(new ToolEntity());
     }
 
 
@@ -75,12 +58,6 @@ public class ToolController {
         GenericActionResponse gar = new GenericActionResponse("Successfully deleted the tool.", null, GenericActionType.DELETE);
 
         return ResponseEntity.ok().body(gar);
-    }
-
-    @PreAuthorize("(hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_EMPLOYEE')) and (hasAuthority('INVENTORY'))")
-    @PostMapping("/kiosk")
-    public ResponseEntity<GenericActionResponse> kioskTool(@AuthenticationPrincipal UserEntity user, @RequestBody KioskDto dto) {
-        return toolService.inventoryTool(dto.getBarcode(), user.getId());
     }
 
 }
